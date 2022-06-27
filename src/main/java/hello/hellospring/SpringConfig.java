@@ -1,10 +1,13 @@
 package hello.hellospring;
 
+import hello.hellospring.repository.JdbcMemberRepository;
 import hello.hellospring.repository.MemberRepository;
-import hello.hellospring.repository.MemoryMemberRepository;
 import hello.hellospring.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.sql.DataSource;
 
 /*
 @Service, @Repository 대신 이렇게해도 할 수도 있다.
@@ -14,6 +17,12 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class SpringConfig {
+    private final DataSource dataSource;
+
+    public SpringConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     @Bean
     public MemberService memberService() {
         return new MemberService(memberRepository());
@@ -21,8 +30,9 @@ public class SpringConfig {
 
     @Bean
     public MemberRepository memberRepository() {
-        return new MemoryMemberRepository();
+//        return new MemoryMemberRepository();
         // 직접 컨트롤을 하면 구현체를 한 곳에서 쉽게 조절할 수 있다.
-        // return new JdbcMemberRespoistory();
+        // 다형성
+        return new JdbcMemberRepository(dataSource);
     }
 }
