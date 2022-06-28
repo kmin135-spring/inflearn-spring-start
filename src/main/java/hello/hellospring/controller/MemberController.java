@@ -13,6 +13,17 @@ public class MemberController {
 
     public MemberController(MemberService mService) {
         this.mService = mService;
+        /*
+        1. AOP 미적용일 때
+        #memberService = class hello.hellospring.service.MemberService
+
+        2. AOP가 적용되어있을 때 (@Transactional 이나 이 강의처럼 TimeTraceAop 에서 대상으로 건 경우)
+        #memberService = class hello.hellospring.service.MemberService$$EnhancerBySpringCGLIB$$1b2067fc
+
+        AOP가 적용되기전에는 MemberService를 직접 참조한 반면
+        적용 후에는 CGLIB를 통해 프록시로 감싸서 (가짜 MemberService) 참조함을 알 수 있음
+         */
+        System.out.println("#memberService = " + mService.getClass());
     }
 
     @GetMapping("/members/new")
